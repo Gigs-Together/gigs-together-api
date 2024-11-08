@@ -6,7 +6,7 @@ export class AdminService {
   private admins: string[];
 
   constructor(private configService: ConfigService) {
-    const admins = this.configService.get<string>('ADMINS');
+    const admins = this.configService.get<string>('BOT_ADMINS');
     this.admins = admins ? admins.split(',') : [];
   }
 
