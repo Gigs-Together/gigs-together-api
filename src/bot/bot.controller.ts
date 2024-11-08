@@ -1,7 +1,7 @@
-import { Controller, HttpCode, Post, UseGuards, Req } from '@nestjs/common';
-import { Request } from 'express';
+import { Controller, HttpCode, Post, UseGuards, Body } from '@nestjs/common';
 import { BotService } from './bot.service';
 import { AdminGuard } from '../admin/admin.guard';
+import { UpdateDto } from './dto/update.dto';
 
 @Controller('bot')
 export class BotController {
@@ -10,11 +10,7 @@ export class BotController {
   @Post('webhook')
   @HttpCode(200)
   @UseGuards(AdminGuard)
-  async handleWebhook(
-    @Req() req: Request & { body: { message?: any } },
-  ): Promise<void> {
-    if (req.body.message) {
-      await this.botService.handleMessage(req.body.message);
-    }
+  async handleUpdate(@Body() update: UpdateDto): Promise<void> {
+    await this.botService.handleMessage(update.message);
   }
 }

@@ -1,37 +1,68 @@
 import { Injectable } from '@nestjs/common';
 import axios from '../common/axios';
-import { Message } from './bot.types';
+import { MessageDto } from './dto/message.dto';
+
+enum Command {
+  Start = 'start',
+  Suggest = 'suggest',
+}
 
 @Injectable()
 export class BotService {
-  private async sendMessage(chatId: string, text: string): Promise<void> {
-    // Type definition for params as an object with specific properties
-    const params: { chat_id: string; text: string } = { chat_id: chatId, text };
+  private async sendMessage({
+    chatId,
+    text,
+  }: {
+    chatId: string | number;
+    text: string;
+  }): Promise<void> {
+    const params = {
+      chat_id: chatId, // 1-4096 characters after entities parsing
+      text,
+    };
 
-    await axios.get('sendMessage', { params });
+    return axios.get('sendMessage', { params });
   }
 
-  async handleMessage(message: Message): Promise<void> {
+  async handleMessage(message: MessageDto): Promise<void> {
+    if (!message) {
+      return;
+    }
     const messageText = message.text || '';
     const chatId = message.chat.id;
 
-    if (messageText.charAt(0) === '/') {
-      const command = messageText.substring(1);
-      switch (command) {
-        case 'start':
-          await this.sendMessage(
-            chatId,
-            `Hi! I'm a bot. I can help you to get started!`,
-          );
-          break;
-        default:
-          await this.sendMessage(
-            chatId,
-            `Hey there, I don't know that command.`,
-          );
+    if (messageText.charAt(0) !== '/') {
+      await this.sendMessage({
+        chatId,
+        text: `You said: "${messageText}"`,
+      });
+      return;
+    }
+
+    const command = messageText.substring(1).toLowerCase();
+    await this.handleCommand(command, chatId);
+  }
+
+  private async handleCommand(command: string, chatId: number) {
+    switch (command) {
+      case Command.Start:
+        await this.sendMessage({
+          chatId,
+          text: `Hi! I'm a Gigs Together bot. I am still in development...`,
+        });
+        break;
+      case Command.Suggest:
+        await this.sendMessage({
+          chatId,
+          text: `Suggest command is currently in development. Keep it together!`,
+        });
+        break;
+      default: {
+        await this.sendMessage({
+          chatId,
+          text: `Hey there, I don't know that command.`,
+        });
       }
-    } else {
-      await this.sendMessage(chatId, `You said: "${messageText}"`);
     }
   }
 }
