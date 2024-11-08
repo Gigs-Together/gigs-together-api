@@ -1,6 +1,6 @@
 import { Controller, HttpCode, Post, UseGuards, Body } from '@nestjs/common';
 import { BotService } from './bot.service';
-import { AdminGuard } from '../admin/admin.guard';
+import { AdminGuard } from './guards/admin.guard';
 import { UpdateDto } from './dto/update.dto';
 
 @Controller('bot')

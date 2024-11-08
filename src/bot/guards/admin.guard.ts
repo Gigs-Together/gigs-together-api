@@ -4,12 +4,12 @@ import {
   ExecutionContext,
   ForbiddenException,
 } from '@nestjs/common';
-import { AdminService } from './admin.service';
+import { BotService } from '../bot.service';
 import { Request } from 'express';
 
 @Injectable()
 export class AdminGuard implements CanActivate {
-  constructor(private readonly adminService: AdminService) {}
+  constructor(private readonly botService: BotService) {}
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest<Request>();
@@ -19,7 +19,7 @@ export class AdminGuard implements CanActivate {
       throw new ForbiddenException('User ID is required in the message.');
     }
 
-    if (!this.adminService.isAdmin(userId)) {
+    if (!this.botService.isAdmin(userId)) {
       // TODO: should we keep track of users who tried accessing the bot?
       throw new ForbiddenException('Access denied. Admin privileges required.');
     }
