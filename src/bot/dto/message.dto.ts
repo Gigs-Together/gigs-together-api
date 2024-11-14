@@ -11,3 +11,8 @@ export interface MessageDto {
 
   [key: string]: unknown;
 }
+
+export interface SendMessageDto {
+  chatId: string | number;
+  text: string;
+}

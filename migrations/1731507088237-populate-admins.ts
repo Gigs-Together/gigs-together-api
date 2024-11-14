@@ -12,7 +12,7 @@ const CONNECTION_URI = `${MONGO_URI}${MONGO_DB}`;
 const User = mongoose.model('User', UserSchema);
 
 export async function up(): Promise<void> {
-  const admins = JSON.parse(BOT_ADMINS);
+  const admins: { [key: string]: number } = JSON.parse(BOT_ADMINS);
   if (!admins) {
     throw new Error('BOT_ADMINS not found in process.env');
   }

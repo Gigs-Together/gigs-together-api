@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { BotModule } from './bot/bot.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { UserModule } from './user/user.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -15,10 +17,9 @@ import { MongooseModule } from '@nestjs/mongoose';
       }),
       inject: [ConfigService],
     }),
+    ScheduleModule.forRoot(),
     BotModule,
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

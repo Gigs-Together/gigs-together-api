@@ -11,15 +11,16 @@ import { Request } from 'express';
 export class AdminGuard implements CanActivate {
   constructor(private readonly botService: BotService) {}
 
-  canActivate(context: ExecutionContext): boolean {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
-    const userId = request.body?.message?.from?.id; // TODO: chaining
+    const telegramId: number = request.body?.message?.from?.id; // TODO: chaining
 
-    if (!userId) {
+    if (!telegramId) {
       throw new ForbiddenException('User ID is required in the message.');
     }
 
-    if (!this.botService.isAdmin(userId)) {
+    const isAdmin = await this.botService.isAdmin(telegramId);
+    if (isAdmin !== true) {
       // TODO: should we keep track of users who tried accessing the bot?
       throw new ForbiddenException('Access denied. Admin privileges required.');
     }

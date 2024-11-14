@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import axios from '../common/axios';
-import { MessageDto } from './dto/message.dto';
-import { ConfigService } from '@nestjs/config';
+import { MessageDto, SendMessageDto } from './dto/message.dto';
+import { UserService } from '../user/user.service';
 
 enum Command {
   Start = 'start',
@@ -10,24 +10,13 @@ enum Command {
 
 @Injectable()
 export class BotService {
-  private readonly admins: { [key: string]: string };
+  constructor(private readonly userService: UserService) {}
 
-  constructor(private configService: ConfigService) {
-    const admins = this.configService.get<string>('BOT_ADMINS');
-    this.admins = admins ? JSON.parse(admins) : {};
+  async isAdmin(telegramId: number): Promise<boolean> {
+    return this.userService.isAdmin(telegramId);
   }
 
-  isAdmin(userId: string): boolean {
-    return !!this.admins[userId];
-  }
-
-  private async sendMessage({
-    chatId,
-    text,
-  }: {
-    chatId: string | number;
-    text: string;
-  }): Promise<void> {
+  private async sendMessage({ chatId, text }: SendMessageDto): Promise<void> {
     const params = {
       chat_id: chatId, // 1-4096 characters after entities parsing
       text,
