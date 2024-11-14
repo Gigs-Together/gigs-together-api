@@ -10,15 +10,15 @@ enum Command {
 
 @Injectable()
 export class BotService {
-  private admins: string[];
+  private readonly admins: { [key: string]: string };
 
   constructor(private configService: ConfigService) {
     const admins = this.configService.get<string>('BOT_ADMINS');
-    this.admins = admins ? admins.split(',') : [];
+    this.admins = admins ? JSON.parse(admins) : {};
   }
 
   isAdmin(userId: string): boolean {
-    return this.admins.includes(String(userId));
+    return !!this.admins[userId];
   }
 
   private async sendMessage({
