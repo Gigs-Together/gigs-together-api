@@ -1,7 +1,7 @@
 export interface UserDto {
   id: number;
-  is_bot: boolean;
   first_name: string;
+  is_bot?: boolean;
   username?: string;
   language_code?: string;
 

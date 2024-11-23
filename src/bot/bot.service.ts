@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import axios from '../common/axios';
 import { MessageDto, SendMessageDto } from './dto/message.dto';
 import { UserService } from '../user/user.service';
+import * as crypto from 'crypto';
+import { UserDto } from './dto/user.dto';
 
 enum Command {
   Start = 'start',
@@ -46,24 +48,77 @@ export class BotService {
 
   private async handleCommand(command: string, chatId: number) {
     switch (command) {
-      case Command.Start:
+      case Command.Start: {
         await this.sendMessage({
           chatId,
           text: `Hi! I'm a Gigs Together bot. I am still in development...`,
         });
         break;
-      case Command.Suggest:
+      }
+      case Command.Suggest: {
+        const text = [
+          'Please, enter the following data using an example...\n',
+          'Title: The Concert',
+          'Date: 01.01.2025',
+          'Location: Razzmatazz',
+          'Tickets: https://www.ticketmaster.es/event/',
+        ].join('\n');
         await this.sendMessage({
           chatId,
-          text: `Suggest command is currently in development. Keep it together!`,
+          text,
         });
         break;
+      }
       default: {
         await this.sendMessage({
           chatId,
           text: `Hey there, I don't know that command.`,
         });
       }
+    }
+  }
+
+  getValidatedTelegramUserData(initDataString: string): UserDto {
+    const params = new URLSearchParams(initDataString);
+    const initData: { [key: string]: string } = {};
+    params.forEach((value, key) => {
+      initData[key] = value;
+    });
+
+    const receivedHash = initData.hash;
+    if (!receivedHash) {
+      throw new Error('Missing hash in initData.');
+    }
+    delete initData.hash;
+
+    const dataCheckString = Object.keys(initData)
+      .sort()
+      .map((key) => `${key}=${initData[key]}`)
+      .join('\n');
+
+    const secretKey = crypto
+      .createHmac('sha256', 'WebAppData')
+      .update(process.env.BOT_TOKEN)
+      .digest();
+
+    const computedHash = crypto
+      .createHmac('sha256', secretKey)
+      .update(dataCheckString)
+      .digest('hex');
+
+    if (computedHash !== receivedHash) {
+      throw new Error('Invalid signature: The data cannot be validated.');
+    }
+
+    if (!initData.user) {
+      throw new Error('Missing user data in initData.');
+    }
+
+    try {
+      return JSON.parse(initData.user);
+    } catch (e) {
+      console.error(e);
+      throw new Error('Failed to parse user data.');
     }
   }
 }
