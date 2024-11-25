@@ -1,9 +1,9 @@
 import { Injectable, NestMiddleware, ForbiddenException } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { BotService } from './bot.service';
+import { TelegramService } from './telegram.service';
 
 @Injectable()
-export class BotMiddleware implements NestMiddleware {
+export class TelegramMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction): void {
     const secretHeader = req.headers[
       'x-telegram-bot-api-secret-token'
@@ -19,7 +19,7 @@ export class BotMiddleware implements NestMiddleware {
 
 @Injectable()
 export class GigMiddleware implements NestMiddleware {
-  constructor(private readonly botService: BotService) {}
+  constructor(private readonly telegramService: TelegramService) {}
 
   use(req: Request, res: Response, next: NextFunction): void {
     const { telegramInitDataString } = req.body;
@@ -30,8 +30,8 @@ export class GigMiddleware implements NestMiddleware {
 
     try {
       const { parsedData, dataCheckString } =
-        this.botService.parseTelegramInitDataString(telegramInitDataString);
-      this.botService.validateTelegramInitData(
+        this.telegramService.parseTelegramInitDataString(telegramInitDataString);
+      this.telegramService.validateTelegramInitData(
         dataCheckString,
         parsedData.hash,
       );

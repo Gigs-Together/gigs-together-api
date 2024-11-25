@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { BotModule } from './bot/bot.module';
+import { TelegramModule } from './telegram/telegram.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './user/user.module';
@@ -19,7 +19,7 @@ import { GigModule } from './gig/gig.module';
       inject: [ConfigService],
     }),
     ScheduleModule.forRoot(),
-    BotModule,
+    TelegramModule,
     UserModule,
     GigModule,
   ],

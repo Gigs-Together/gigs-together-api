@@ -10,7 +10,7 @@ enum Command {
 }
 
 @Injectable()
-export class BotService {
+export class TelegramService {
   constructor(private readonly userService: UserService) {}
 
   async isAdmin(telegramId: number): Promise<boolean> {

@@ -1,15 +1,15 @@
 import { Controller, HttpCode, Post, UseGuards, Body } from '@nestjs/common';
-import { BotService } from './bot.service';
+import { TelegramService } from './telegram.service';
 import { AdminGuard } from './guards/admin.guard';
 import { UpdateDto } from './dto/update.dto';
 import { CreateGigDto } from '../gig/dto/gig.dto';
 import { AntiBotGuard } from './guards/anti-bot.guard';
 import { GigService } from '../gig/gig.service';
 
-@Controller('bot')
-export class BotController {
+@Controller('telegram')
+export class TelegramController {
   constructor(
-    private readonly botService: BotService,
+    private readonly telegramService: TelegramService,
     private readonly gigService: GigService,
   ) {}
 
@@ -17,7 +17,7 @@ export class BotController {
   @HttpCode(200)
   @UseGuards(AdminGuard)
   async handleUpdate(@Body() update: UpdateDto): Promise<void> {
-    await this.botService.handleMessage(update.message);
+    await this.telegramService.handleMessage(update.message);
   }
 
   @Post('gig')

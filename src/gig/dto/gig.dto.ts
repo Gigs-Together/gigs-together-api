@@ -1,4 +1,4 @@
-import { UserDto } from '../../bot/dto/user.dto';
+import { UserDto } from '../../telegram/dto/user.dto';
 
 export interface CreateGigDto {
   title: string;
