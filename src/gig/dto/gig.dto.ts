@@ -5,5 +5,5 @@ export interface CreateGigDto {
   date: string;
   location: string;
   tickets: string;
-  telegramUser: UserDto;
+  user: UserDto;
 }

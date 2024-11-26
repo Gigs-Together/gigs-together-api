@@ -2,16 +2,16 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
 @Schema()
-export class User {
+export class Admin {
   @Prop()
   username?: string;
 
   @Prop({ unique: true })
   telegramId: number;
 
-  @Prop({ default: false })
-  isAdmin: boolean;
+  @Prop({ default: true })
+  isActive: boolean;
 }
 
-export type UserDocument = HydratedDocument<User>;
-export const UserSchema = SchemaFactory.createForClass(User);
+export type AdminDocument = HydratedDocument<Admin>;
+export const AdminSchema = SchemaFactory.createForClass(Admin);

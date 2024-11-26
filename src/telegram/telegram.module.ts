@@ -9,11 +9,11 @@ import { TelegramService } from './telegram.service';
 import { TelegramMiddleware, GigMiddleware } from './telegram.middleware';
 import { GigModule } from '../gig/gig.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User, UserSchema } from '../schemas/user.schema';
+import { Admin, AdminSchema } from '../schemas/admin.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([{ name: Admin.name, schema: AdminSchema }]),
     GigModule,
   ],
   controllers: [TelegramController],

@@ -30,13 +30,15 @@ export class GigMiddleware implements NestMiddleware {
 
     try {
       const { parsedData, dataCheckString } =
-        this.telegramService.parseTelegramInitDataString(telegramInitDataString);
+        this.telegramService.parseTelegramInitDataString(
+          telegramInitDataString,
+        );
       this.telegramService.validateTelegramInitData(
         dataCheckString,
         parsedData.hash,
       );
       delete req.body.telegramInitDataString;
-      req.body.telegramUser = JSON.parse(parsedData.user);
+      req.body.user = JSON.parse(parsedData.user);
     } catch (e) {
       throw new ForbiddenException(e);
     }

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { UserSchema } from '../src/schemas/user.schema';
+import { AdminSchema } from '../src/schemas/admin.schema';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -9,7 +9,7 @@ const { BOT_ADMINS } = process.env;
 
 const CONNECTION_URI = `${MONGO_URI}${MONGO_DB}`;
 
-const User = mongoose.model('User', UserSchema);
+const Admin = mongoose.model('Admin', AdminSchema);
 
 export async function up(): Promise<void> {
   const admins: { [key: string]: number } = JSON.parse(BOT_ADMINS);
@@ -24,12 +24,12 @@ export async function up(): Promise<void> {
         $setOnInsert: {
           telegramId: id,
           username,
-          isAdmin: true,
+          isActive: true,
         },
       }, // Use $setOnInsert to insert only if the document doesn't exist
       upsert: true, // Enables upsert: create if not found, otherwise no action
     },
   }));
 
-  await User.bulkWrite(operations);
+  await Admin.bulkWrite(operations);
 }
