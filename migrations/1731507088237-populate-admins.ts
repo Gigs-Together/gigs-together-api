@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { UserSchema } from '../src/user/user.schema';
+import { UserSchema } from '../src/schemas/user.schema';
 import * as dotenv from 'dotenv';
 
 dotenv.config();

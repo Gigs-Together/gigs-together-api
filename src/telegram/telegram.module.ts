@@ -6,12 +6,16 @@ import {
 } from '@nestjs/common';
 import { TelegramController } from './telegram.controller';
 import { TelegramService } from './telegram.service';
-import { UserModule } from '../user/user.module';
 import { TelegramMiddleware, GigMiddleware } from './telegram.middleware';
 import { GigModule } from '../gig/gig.module';
+import { MongooseModule } from '@nestjs/mongoose';
+import { User, UserSchema } from '../schemas/user.schema';
 
 @Module({
-  imports: [UserModule, GigModule],
+  imports: [
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    GigModule,
+  ],
   controllers: [TelegramController],
   providers: [TelegramService],
 })

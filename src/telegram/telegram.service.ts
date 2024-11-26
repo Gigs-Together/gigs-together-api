@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import axios from '../common/axios';
 import { MessageDto, SendMessageDto } from './dto/message.dto';
-import { UserService } from '../user/user.service';
 import * as crypto from 'crypto';
+import { User, UserDocument } from '../schemas/user.schema';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 enum Command {
   Start = 'start',
@@ -11,10 +14,31 @@ enum Command {
 
 @Injectable()
 export class TelegramService {
-  constructor(private readonly userService: UserService) {}
+  private adminsCache: Promise<UserDocument[]>;
+
+  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {
+    this.refreshAdminsCache();
+  }
+
+  private async refreshAdminsCache(): Promise<void> {
+    this.adminsCache = this.getAdmins();
+    const admins = await this.adminsCache;
+    console.log(`Admins cache refreshed: ${admins.length} admin(s) found.`);
+  }
+
+  @Cron(CronExpression.EVERY_10_MINUTES)
+  async handleAdminsCacheSync(): Promise<void> {
+    console.log('Refreshing admins cache from the database...');
+    await this.refreshAdminsCache();
+  }
+
+  async getAdmins(): Promise<UserDocument[]> {
+    return this.userModel.find({ isAdmin: true }).exec();
+  }
 
   async isAdmin(telegramId: number): Promise<boolean> {
-    return this.userService.isAdmin(telegramId);
+    const admins = await this.adminsCache;
+    return admins.some((admin) => admin.telegramId === telegramId);
   }
 
   private async sendMessage({ chatId, text }: SendMessageDto): Promise<void> {

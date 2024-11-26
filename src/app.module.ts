@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { TelegramModule } from './telegram/telegram.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserModule } from './user/user.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { GigModule } from './gig/gig.module';
 
@@ -20,7 +19,6 @@ import { GigModule } from './gig/gig.module';
     }),
     ScheduleModule.forRoot(),
     TelegramModule,
-    UserModule,
     GigModule,
   ],
   controllers: [AppController],

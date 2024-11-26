@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateGigDto } from './dto/gig.dto';
-import { Gig } from './gig.schema';
+import { Gig } from '../schemas/gig.schema';
 
 @Injectable()
 export class GigService {
