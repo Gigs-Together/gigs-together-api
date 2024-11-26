@@ -9,7 +9,6 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 
 enum Command {
   Start = 'start',
-  Suggest = 'suggest',
 }
 
 @Injectable()
@@ -73,20 +72,6 @@ export class TelegramService {
         await this.sendMessage({
           chatId,
           text: `Hi! I'm a Gigs Together bot. I am still in development...`,
-        });
-        break;
-      }
-      case Command.Suggest: {
-        const text = [
-          'Please, enter the following data using an example...\n',
-          'Title: The Concert',
-          'Date: 01.01.2025',
-          'Location: Razzmatazz',
-          'Tickets: https://www.ticketmaster.es/event/',
-        ].join('\n');
-        await this.sendMessage({
-          chatId,
-          text,
         });
         break;
       }
