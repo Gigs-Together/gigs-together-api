@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
+import { Status } from '../gig/enums/status.enum';
 
 @Schema()
 export class Gig {
@@ -14,6 +15,9 @@ export class Gig {
 
   @Prop()
   ticketsUrl: string;
+
+  @Prop({ default: Status.pending })
+  status: Status;
 }
 
 export type GigDocument = HydratedDocument<Gig>;
