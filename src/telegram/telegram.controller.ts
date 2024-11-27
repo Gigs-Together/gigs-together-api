@@ -11,9 +11,10 @@ export class TelegramController {
   constructor(
     private readonly telegramService: TelegramService,
     private readonly gigService: GigService,
-  ) {}
+  ) {
+  }
 
-  @Post('bot/webhook')
+  @Post('webhook')
   @HttpCode(200)
   @UseGuards(AdminGuard)
   async handleUpdate(@Body() update: UpdateDto): Promise<void> {

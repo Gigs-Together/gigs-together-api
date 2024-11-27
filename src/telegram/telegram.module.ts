@@ -23,7 +23,7 @@ export class TelegramModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(TelegramMiddleware)
-      .forRoutes({ path: 'telegram/bot/webhook', method: RequestMethod.POST });
+      .forRoutes({ path: 'telegram/webhook', method: RequestMethod.POST });
     consumer
       .apply(GigMiddleware)
       .forRoutes({ path: 'telegram/gig', method: RequestMethod.POST });
