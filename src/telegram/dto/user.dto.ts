@@ -1,4 +1,4 @@
-export interface UserDto {
+export interface TelegramUserDto {
   id: number;
   first_name: string;
   is_bot?: boolean;
@@ -6,4 +6,8 @@ export interface UserDto {
   language_code?: string;
 
   [key: string]: unknown;
+}
+
+export interface UserDto extends TelegramUserDto {
+  isAdmin: boolean;
 }
