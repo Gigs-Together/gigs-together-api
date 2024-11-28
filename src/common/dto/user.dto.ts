@@ -8,6 +8,7 @@ export interface TelegramUserDto {
   [key: string]: unknown;
 }
 
-export interface UserDto extends TelegramUserDto {
+export interface UserDto {
+  telegramUser: TelegramUserDto;
   isAdmin: boolean;
 }

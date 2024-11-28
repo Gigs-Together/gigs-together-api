@@ -1,4 +1,4 @@
-import { TelegramUserDto } from './user.dto';
+import { TelegramUserDto } from '../../common/dto/user.dto';
 import { ChatDto } from './chat.dto';
 
 export interface MessageDto {

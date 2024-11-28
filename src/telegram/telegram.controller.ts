@@ -1,42 +1,27 @@
-import {
-  Controller,
-  HttpCode,
-  Post,
-  UseGuards,
-  Body,
-  Patch,
-  Param,
-} from '@nestjs/common';
-import { TelegramService } from './telegram.service';
-import { AdminGuard } from './guards/admin.guard';
-import { UpdateDto } from './dto/update.dto';
-import { SubmitGigDto } from '../gig/dto/gig.dto';
+import { Controller, HttpCode, Post, UseGuards, Body } from '@nestjs/common';
 import { AntiBotGuard } from './guards/anti-bot.guard';
 import { GigService } from '../gig/gig.service';
+import { V1TelegramCreateGigRequestBodyValidated } from './dto/requests/v1-telegram-create-gig-request';
 
 @Controller('telegram')
 export class TelegramController {
-  constructor(
-    private readonly telegramService: TelegramService,
-    private readonly gigService: GigService,
-  ) {}
+  constructor(private readonly gigService: GigService) {}
 
-  @Post('webhook')
-  @HttpCode(200)
-  @UseGuards(AdminGuard)
-  async handleUpdate(@Body() update: UpdateDto): Promise<void> {
-    await this.telegramService.handleMessage(update.message);
-  }
-
-  @Post('gig')
+  @Post('v1/gig')
   @HttpCode(201)
   @UseGuards(AntiBotGuard)
-  async createGig(@Body() data: SubmitGigDto): Promise<void> {
-    await this.gigService.handleGigSubmit(data);
-  }
-
-  @Patch('gig/approve/:id')
-  async approveGig(@Param('id') gigId: string): Promise<void> {
-    await this.gigService.approveGig(gigId);
+  async createGig(
+    @Body() data: V1TelegramCreateGigRequestBodyValidated,
+  ): Promise<void> {
+    const mappedData = {
+      gig: {
+        title: data.gig.title,
+        date: data.gig.date,
+        location: data.gig.location,
+        ticketsUrl: data.gig.ticketsUrl,
+      },
+      isAdmin: data.user.isAdmin,
+    };
+    await this.gigService.handleGigSubmit(mappedData);
   }
 }

@@ -6,6 +6,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ScheduleModule } from '@nestjs/schedule';
 import { GigModule } from './gig/gig.module';
+import { BotModule } from './bot/bot.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { GigModule } from './gig/gig.module';
     ScheduleModule.forRoot(),
     TelegramModule,
     GigModule,
+    BotModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

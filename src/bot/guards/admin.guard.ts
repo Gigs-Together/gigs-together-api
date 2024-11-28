@@ -4,22 +4,20 @@ import {
   ExecutionContext,
   ForbiddenException,
 } from '@nestjs/common';
-import { TelegramService } from '../telegram.service';
 import { Request } from 'express';
+import { AuthService } from '../../auth/auth.service';
+import { UpdateDto } from '../dto/update.dto';
 
 @Injectable()
 export class AdminGuard implements CanActivate {
-  constructor(private readonly telegramService: TelegramService) {}
+  constructor(private readonly authService: AuthService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
-    const telegramId: number = request.body?.message?.from?.id;
+    const update: UpdateDto = request.body;
+    const telegramId = update?.message?.from?.id;
 
-    if (!telegramId) {
-      throw new ForbiddenException('User ID is required in the message.');
-    }
-
-    const isAdmin = await this.telegramService.isAdmin(telegramId);
+    const isAdmin = await this.authService.isAdmin(telegramId);
     if (isAdmin !== true) {
       throw new ForbiddenException('Access denied. Admin privileges required.');
     }
