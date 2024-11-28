@@ -8,7 +8,7 @@ enum Command {
 
 @Injectable()
 export class BotService {
-  private async sendMessage({ chatId, text }: SendMessageDto): Promise<void> {
+  async sendMessage({ chatId, text }: SendMessageDto): Promise<void> {
     const params = {
       chat_id: chatId, // 1-4096 characters after entities parsing
       text,

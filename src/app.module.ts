@@ -6,6 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ScheduleModule } from '@nestjs/schedule';
 import { GigModule } from './gig/gig.module';
+import { PublisherModule } from './publisher/publisher.module';
 import { BotModule } from './bot/bot.module';
 import { AuthModule } from './auth/auth.module';
 
@@ -22,6 +23,7 @@ import { AuthModule } from './auth/auth.module';
     ScheduleModule.forRoot(),
     TelegramModule,
     GigModule,
+    PublisherModule,
     BotModule,
     AuthModule,
   ],

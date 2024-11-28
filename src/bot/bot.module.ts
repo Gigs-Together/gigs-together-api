@@ -8,6 +8,7 @@ import { AuthModule } from '../auth/auth.module';
   imports: [AuthModule],
   providers: [BotService],
   controllers: [BotController],
+  exports: [BotService],
 })
 export class BotModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

@@ -8,11 +8,15 @@ import { Model, Types } from 'mongoose';
 import { GigDto, SubmitGigDto } from './dto/gig.dto';
 import { Gig, GigDocument } from '../schemas/gig.schema';
 import { Status } from './enums/status.enum';
+import { PublisherService } from '../publisher/publisher.service';
 
 // TODO: add allowing only specific status transitions
 @Injectable()
 export class GigService {
-  constructor(@InjectModel(Gig.name) private gigModel: Model<Gig>) {}
+  constructor(
+    @InjectModel(Gig.name) private gigModel: Model<Gig>,
+    private readonly publisherService: PublisherService,
+  ) {}
 
   async handleGigSubmit(data: SubmitGigDto): Promise<void> {
     const savedGig = await this.saveGig(data.gig);
@@ -34,7 +38,8 @@ export class GigService {
 
   async handleGigApprove(gigId: string | Types.ObjectId): Promise<void> {
     const updatedGig = await this.updateGigStatus(gigId, Status.approved);
-    // TODO: publish
+    await this.publisherService.publish(updatedGig);
+    await this.updateGigStatus(gigId, Status.published);
   }
 
   private async updateGigStatus(
