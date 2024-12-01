@@ -1,15 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { GigDocument } from '../schemas/gig.schema';
+import { CalendarService } from '../calendar/calendar.service';
 import { BotService } from '../bot/bot.service';
 
 @Injectable()
 export class PublisherService {
   constructor(
+    private readonly calendarService: CalendarService,
     private readonly botService: BotService,
   ) {}
 
   async publish(gig: GigDocument): Promise<void> {
-    const chatId = process.env.CHANNEL_ID;
+    // Set start time to 8:00 PM
+    const startDateTime = new Date(gig.date);
+    startDateTime.setHours(20, 0, 0, 0); // Set to 8:00 PM (20:00)
+
+    // Calculate end time (2 hours later)
+    const endDateTime = new Date(startDateTime);
+    endDateTime.setHours(startDateTime.getHours() + 2); // Add 2 hours
+
+    await this.calendarService.addEvent({
+      title: gig.title,
+      ticketsUrl: gig.ticketsUrl,
+      location: gig.location,
+      startDate: startDateTime,
+      endDate: endDateTime,
+    });
+
     const dateFormatter = new Intl.DateTimeFormat('en-GB', {
       year: 'numeric',
       month: 'short', // e.g., "Nov"
@@ -23,6 +40,9 @@ export class PublisherService {
       'Location: ' + gig.location,
       'Tickets: ' + gig.ticketsUrl,
     ].join('\n');
+
+    const chatId = process.env.CHANNEL_ID;
+
     await this.botService.sendMessage({ chatId, text });
   }
 }
