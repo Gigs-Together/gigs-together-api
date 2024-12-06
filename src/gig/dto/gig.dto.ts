@@ -9,3 +9,8 @@ export interface SubmitGigDto {
   gig: GigDto;
   isAdmin: boolean;
 }
+
+export interface GetGigsDto {
+  page: number;
+  size: number;
+}
