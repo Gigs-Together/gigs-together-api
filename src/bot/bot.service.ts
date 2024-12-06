@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { MessageDto, SendMessageDto } from './dto/message.dto';
-import axios from '../common/axios';
+import { HttpService } from '@nestjs/axios';
 
 enum Command {
   Start = 'start',
@@ -8,13 +8,15 @@ enum Command {
 
 @Injectable()
 export class BotService {
+  constructor(private readonly httpService: HttpService) {}
+
   async sendMessage({ chatId, text }: SendMessageDto): Promise<void> {
     const params = {
       chat_id: chatId, // 1-4096 characters after entities parsing
       text,
     };
 
-    return axios.get('sendMessage', { params });
+    this.httpService.get('sendMessage', { params });
   }
 
   async handleMessage(message: MessageDto): Promise<void> {
