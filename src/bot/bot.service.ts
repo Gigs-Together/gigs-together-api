@@ -20,7 +20,7 @@ export class BotService {
   }
 
   async handleMessage(message: MessageDto): Promise<void> {
-    if (!message) {
+    if (!message?.chat?.id) {
       return;
     }
     const messageText = message.text || '';
