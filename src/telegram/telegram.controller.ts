@@ -1,4 +1,11 @@
-import { Controller, HttpCode, Post, UseGuards, Body } from '@nestjs/common';
+import {
+  Controller,
+  HttpCode,
+  Post,
+  UseGuards,
+  Body,
+  Version,
+} from '@nestjs/common';
 import { AntiBotGuard } from './guards/anti-bot.guard';
 import { GigService } from '../gig/gig.service';
 import { V1TelegramCreateGigRequestBodyValidated } from './dto/requests/v1-telegram-create-gig-request';
@@ -7,7 +14,8 @@ import { V1TelegramCreateGigRequestBodyValidated } from './dto/requests/v1-teleg
 export class TelegramController {
   constructor(private readonly gigService: GigService) {}
 
-  @Post('v1/gig')
+  @Version('1')
+  @Post('gig')
   @HttpCode(201)
   @UseGuards(AntiBotGuard)
   async createGig(

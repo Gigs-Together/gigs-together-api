@@ -13,7 +13,8 @@ export class TelegramCreateGigMiddleware implements NestMiddleware {
   ) {}
 
   async use(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const { telegramInitDataString } = req.body as V1TelegramCreateGigRequestBody;
+    const { telegramInitDataString } =
+      req.body as V1TelegramCreateGigRequestBody;
 
     if (!telegramInitDataString) {
       throw new ForbiddenException('Missing Telegram user data');
