@@ -24,8 +24,8 @@ export async function up(): Promise<void> {
           username,
           isActive: true,
         },
-      },
-      upsert: true,
+      }, // Use $setOnInsert to insert only if the document doesn't exist
+      upsert: true, // Enables upsert: create if not found, otherwise no action
     },
   }));
 
