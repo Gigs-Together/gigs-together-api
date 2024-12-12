@@ -1,0 +1,16 @@
+# 0. Check if you have docker 'docker --version'. Install if you don't
+# 1. Run Docker:
+#   - WSL/Linux: 'sudo service docker start'
+#   - Windows (PowerShell/CMD): just run Docker Desktop
+# 2. Make sure you have the variables in your .env
+# 3. Run 'docker-compose up -d'.
+
+services:
+  mongodb:
+    container_name: mongodb-gigs
+    image: mongodb/mongodb-community-server
+    ports:
+      - '${MONGO_PORT}:27017'
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_DB}
+    restart: unless-stopped
