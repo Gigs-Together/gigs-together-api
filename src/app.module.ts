@@ -17,7 +17,7 @@ import { CalendarModule } from './calendar/calendar.module';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
-        uri: `${configService.get<string>('MONGO_URI')}${configService.get<string>('MONGO_DB')}`,
+        uri: configService.get<string>('MONGO_URI'),
       }),
       inject: [ConfigService],
     }),
